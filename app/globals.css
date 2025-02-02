@@ -19,7 +19,7 @@
 
 @layer components {
   .container {
-    @apply mx-[5vw] max-w-7xl;
+    @apply mx-[8vw] max-w-[calc(84vw-15rem)];
   }
 }
 
