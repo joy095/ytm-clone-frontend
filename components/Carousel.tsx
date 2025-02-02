@@ -4,13 +4,13 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { RxChevronLeft, RxChevronRight } from "react-icons/rx";
-import { IoMdPlay } from "react-icons/io";
-
+import VideoThumbnail from "./VideoThumbnail";
 
 const MusicSlider = () => {
   const [showControls, setShowControls] = useState(false);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [playingVideo, setPlayingVideo] = useState<number | null>(null);
 
   const scrollContainerRef = useRef(null);
 
@@ -20,92 +20,108 @@ const MusicSlider = () => {
       title: "Love Myself",
       artist: "Hailee Steinfeld",
       views: "332M views",
-      img: "child-8347081_1280.webp",
+      img: "/child-8347081_1280.webp",
+      video:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     },
     {
       id: 2,
       title: "Jannat",
-      artist: "Emraan Hashmi, Sonal Pritam",
+      artist: "Emraan Hashmi",
       views: "47M views",
-      img: "child-9195259_1280.webp",
+      img: "/child-9195259_1280.webp",
+      video:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
     },
     {
       id: 3,
-      title: "Tu Itni Khoobsurat Hai (Reloaded)",
-      artist: "Prakriti Kakar & Jubin Nautiyal",
-      views: "74M views",
-      img: "child-8347081_1280.webp",
+      title: "Love Myself",
+      artist: "Hailee Steinfeld",
+      views: "332M views",
+      img: "/child-8347081_1280.webp",
+      video:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     },
     {
       id: 4,
-      title: "Halo",
-      artist: "Beyoncé",
-      views: "1.6B views",
-      img: "child-9195259_1280.webp",
+      title: "Jannat",
+      artist: "Emraan Hashmi",
+      views: "47M views",
+      img: "/child-9195259_1280.webp",
+      video:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
     },
     {
       id: 5,
       title: "Love Myself",
       artist: "Hailee Steinfeld",
       views: "332M views",
-      img: "child-8347081_1280.webp",
+      img: "/child-8347081_1280.webp",
+      video:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     },
     {
       id: 6,
       title: "Jannat",
-      artist: "Emraan Hashmi, Sonal Pritam",
+      artist: "Emraan Hashmi",
       views: "47M views",
-      img: "child-9195259_1280.webp",
+      img: "/child-9195259_1280.webp",
+      video:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
     },
     {
       id: 7,
-      title: "Tu Itni Khoobsurat Hai (Reloaded)",
-      artist: "Prakriti Kakar & Jubin Nautiyal",
-      views: "74M views",
-      img: "child-8347081_1280.webp",
+      title: "Love Myself",
+      artist: "Hailee Steinfeld",
+      views: "332M views",
+      img: "/child-8347081_1280.webp",
+      video:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
     },
     {
       id: 8,
-      title: "Halo",
-      artist: "Beyoncé",
-      views: "1.6B views",
-      img: "child-9195259_1280.webp",
+      title: "Jannat",
+      artist: "Emraan Hashmi",
+      views: "47M views",
+      img: "/child-9195259_1280.webp",
+      video:
+        "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
     },
   ];
 
   const checkScrollButtons = useCallback(() => {
     if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
+      const container = scrollContainerRef.current as HTMLElement;
       const scrollLeft = container.scrollLeft;
       const maxScroll = container.scrollWidth - container.clientWidth;
-
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(scrollLeft < maxScroll - 1);
     }
   }, []);
 
-  const scroll = useCallback((direction) => {
+  const scroll = useCallback((direction: "next" | "prev") => {
     if (scrollContainerRef.current) {
-      const container = scrollContainerRef.current;
+      const container = scrollContainerRef.current as HTMLElement;
       const scrollAmount = container.clientWidth * 0.8;
       const newScrollPosition =
         direction === "next"
           ? container.scrollLeft + scrollAmount
           : container.scrollLeft - scrollAmount;
 
-      container.scrollTo({
-        left: newScrollPosition,
-        behavior: "smooth",
-      });
+      container.scrollTo({ left: newScrollPosition, behavior: "smooth" });
     }
   }, []);
 
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (container) {
-      container.addEventListener("scroll", checkScrollButtons);
+      (container as HTMLElement).addEventListener("scroll", checkScrollButtons);
       checkScrollButtons();
-      return () => container.removeEventListener("scroll", checkScrollButtons);
+      return () =>
+        (container as HTMLElement).removeEventListener(
+          "scroll",
+          checkScrollButtons
+        );
     }
   }, [checkScrollButtons]);
 
@@ -122,14 +138,14 @@ const MusicSlider = () => {
           <div className="flex gap-2">
             <button
               onClick={() => scroll("prev")}
-              className="rounded-full p-2 border border-secondary hover:border-white/20 hover:bg-default transition-colors"
+              className="cursor-pointer rounded-full p-2 border border-secondary hover:border-white/20 hover:bg-default transition-colors active:scale-90 scale-100"
               disabled={!canScrollLeft}
             >
               <RxChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => scroll("next")}
-              className="rounded-full p-2 border border-secondary hover:border-white/20 hover:bg-default transition-colors"
+              className="cursor-pointer rounded-full p-2 border border-secondary hover:border-white/20 hover:bg-default transition-colors active:scale-90 scale-100"
               disabled={!canScrollRight}
             >
               <RxChevronRight className="w-4 h-4" />
@@ -145,14 +161,17 @@ const MusicSlider = () => {
           {slides.map((slide) => (
             <div key={slide.id} className="flex-none w-[260px]">
               <div className="group relative aspect-video mb-3 cursor-pointer">
-                <img
-                  src={slide.img}
-                  alt={slide.title}
-                  className="w-full h-full object-cover rounded"
+                <VideoThumbnail
+                  className="object-cover rounded"
+                  height={146}
+                  width={260}
+                  videoSrc={slide.video}
+                  thumbnailSrc={slide.img}
+                  isPlaying={playingVideo === slide.id}
+                  onPlay={() =>
+                    setPlayingVideo(playingVideo === slide.id ? null : slide.id)
+                  }
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <IoMdPlay className="w-12 h-12 fill-white" />
-                </div>
               </div>
               <div className="space-y-1">
                 <h3 className="font-medium truncate">{slide.title}</h3>
