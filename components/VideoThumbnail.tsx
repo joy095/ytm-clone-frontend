@@ -1,58 +1,49 @@
-/** @format */
-import { useEffect, useRef } from "react";
-import Image from "next/image";
+"use client";
+
+import { LuPlay } from 'react-icons/lu';
 
 interface VideoThumbnailProps {
-  videoSrc: string;
-  thumbnailSrc?: string;
-  width?: number;
-  height?: number;
-  className?: string;
+  videoSrc?: string;
+  thumbnailSrc: string;
   isPlaying: boolean;
   onPlay: () => void;
+  width?: number;
+  height?: number;
 }
 
-const VideoThumbnail: React.FC<VideoThumbnailProps> = ({
+const VideoThumbnail = ({
   videoSrc,
   thumbnailSrc,
-  width = 260,
-  height = 146,
-  className,
   isPlaying,
   onPlay,
-}) => {
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  useEffect(() => {
-    if (!videoRef.current) return;
-
-    if (isPlaying) {
-      videoRef.current.play().catch((error) => console.error("Error playing video:", error));
-    } else {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0; // Reset only if the element exists
-    }
-  }, [isPlaying]);
-
+  width = 1280,
+  height = 720
+}: VideoThumbnailProps) => {
   return (
-    <div className={`relative ${className}`} onClick={onPlay} style={{ height: height, width: width}}>
-      {isPlaying ? (
-        <video
-          ref={videoRef}
-          src={videoSrc}
+    <div className="relative w-full h-full bg-black">
+      {thumbnailSrc ? (
+        <img
+          src={thumbnailSrc}
+          alt="Video thumbnail"
+          className="w-full h-full object-cover"
           width={width}
           height={height}
-          className="w-full h-full rounded object-cover"
-          muted
         />
       ) : (
-        <Image
-          src={thumbnailSrc!}
-          alt="Video Thumbnail"
-          width={width}
-          height={height}
-          className="w-full h-full object-cover rounded cursor-pointer"
-        />
+        <div className="w-full h-full bg-neutral-900 flex items-center justify-center">
+          <span className="text-white/60">No thumbnail available</span>
+        </div>
+      )}
+      
+      {!isPlaying && (
+        <button
+          onClick={onPlay}
+          className="absolute inset-0 flex items-center justify-center group"
+        >
+          <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
+            <LuPlay className="w-8 h-8 text-white fill-white" />
+          </div>
+        </button>
       )}
     </div>
   );
