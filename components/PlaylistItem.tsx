@@ -2,6 +2,7 @@
 
 import { Video } from '@/types/video';
 import { formatTime } from '@/utils/format';
+import Image from 'next/image';
 
 interface PlaylistItemProps {
   video: Video;
@@ -15,7 +16,7 @@ const PlaylistItem = ({ video, onClick }: PlaylistItemProps) => {
       className="flex items-center gap-3 text-white/80 hover:bg-white/5 p-2 rounded cursor-pointer transition-colors"
     >
       <div className="relative w-32 h-20 flex-shrink-0">
-        <img
+        <Image
           src={video.thumbnail}
           alt={video.title}
           className="w-full h-full object-cover rounded"

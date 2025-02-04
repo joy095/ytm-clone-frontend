@@ -2,6 +2,7 @@
 
 "use client";
 
+import Image from "next/image";
 import React, { useState, useCallback } from "react";
 import {
   LuPlay,
@@ -178,9 +179,11 @@ const VideoLuPlayerController = () => {
                   }}
                   className="flex items-center gap-3 text-white/80 hover:bg-white/5 p-2 rounded cursor-pointer"
                 >
-                  <img
+                  <Image
                     src={video.thumbnail}
                     alt={video.title}
+                    height={80}
+                    width={128}
                     className="w-32 h-20 object-cover rounded"
                   />
                   <div>
