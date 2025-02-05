@@ -69,7 +69,7 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
 
       - name: Export static site (next export)
-        run: ${{ steps.detect-package-manager.outputs.runner }} next export -o out
+        run: ${{ steps.detect-package-manager.outputs.runner }} next export  # no -o option needed now
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
