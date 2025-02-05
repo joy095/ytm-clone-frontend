@@ -6,6 +6,7 @@ import React, { useCallback, useRef } from "react";
 import { RxChevronLeft, RxChevronRight } from "react-icons/rx";
 import { LuPlay } from "react-icons/lu";
 import Image from "next/image";
+import Link from "next/link";
 
 const MusicSlider = () => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -76,13 +77,13 @@ const MusicSlider = () => {
         <div className="flex gap-2">
           <button
             onClick={() => scroll("prev")}
-            className="rounded-full p-2 border border-default hover:border-white/10 hover:bg-white/5 transition-colors active:scale-90"
+            className="rounded-full p-2 border border-white/15 hover:border-white/15 hover:bg-white/10 transition-colors active:scale-90"
           >
             <RxChevronLeft className="w-4 h-4" />
           </button>
           <button
             onClick={() => scroll("next")}
-            className="rounded-full p-2 border border-default hover:border-white/10 hover:bg-white/5 transition-colors active:scale-90"
+            className="rounded-full p-2 border border-white/15 hover:border-white/15 hover:bg-white/10 transition-colors active:scale-90"
           >
             <RxChevronRight className="w-4 h-4" />
           </button>
@@ -90,31 +91,39 @@ const MusicSlider = () => {
       </div>
 
       {/* Slider */}
-      <div
-        ref={scrollContainerRef}
-        className="flex gap-6 overflow-x-auto scrollbar-none scroll-smooth"
-      >
-        {slides.map((slide) => (
-          <div key={slide.id} className="flex-none w-[260px]">
-            <div className="group relative aspect-video mb-3">
-              <Image
-                src={slide.img}
-                alt={slide.title}
-                height={136}
-                width={260}
-                className="w-full h-full object-cover rounded"
-              />
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <LuPlay className="w-12 h-12 fill-white" />
+      <div className="scroll-wrapper">
+        <div
+          ref={scrollContainerRef}
+          className="flex gap-6 overflow-hidden hover:overflow-x-auto pb-1 scroll-container"
+        >
+          {slides.map((slide) => (
+            <div key={slide.id} className="flex-none w-[260px]">
+              <div className="group relative aspect-video mb-3">
+                <Link href={`/video/${slide.id}`}>
+                  <Image
+                    src={slide.img}
+                    alt={slide.title}
+                    height={136}
+                    width={260}
+                    className="w-full h-full object-cover rounded"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <LuPlay className="w-12 h-12 fill-white" />
+                  </div>
+                </Link>
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-medium truncate">{slide.title}</h3>
+                <Link href="">
+                  <p className="hover:border-b border-b leading-3 my-1 border-transparent hover:border-gray-400 w-fit h-full text-sm text-gray-400 truncate">
+                    {slide.artist}
+                  </p>
+                </Link>
+                <p className="text-sm text-gray-400">{slide.views}</p>
               </div>
             </div>
-            <div className="space-y-1">
-              <h3 className="font-medium truncate">{slide.title}</h3>
-              <p className="text-sm text-gray-400 truncate">{slide.artist}</p>
-              <p className="text-sm text-gray-400">{slide.views}</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
