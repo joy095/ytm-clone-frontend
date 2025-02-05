@@ -4,7 +4,8 @@
 
 import React, { useCallback, useRef } from "react";
 import { RxChevronLeft, RxChevronRight } from "react-icons/rx";
-import { LuPlay } from "react-icons/lu";
+import { IoMdPlay } from "react-icons/io";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -108,7 +109,7 @@ const MusicSlider = () => {
                     className="w-full h-full object-cover rounded"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <LuPlay className="w-12 h-12 fill-white" />
+                    <IoMdPlay className="w-12 h-12 fill-white" />
                   </div>
                 </Link>
               </div>
