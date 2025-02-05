@@ -76,11 +76,11 @@ const SideBar = () => {
   const isActive = (href: string) => pathname === href;
 
   return (
-    <aside className="flex flex-col border-r border-secondary w-[15rem] h-[100vh] bg-dark">
+    <aside className="flex flex-col border-r border-secondary w-[15rem] h-[100vh]">
       {/* Header Section */}
       <header className="h-16 flex items-center gap-3 pl-4">
-        <MenuButton />
-        <Logo />
+        {/* <MenuButton />
+        <Logo /> */}
       </header>
 
       {/* Navigation Links */}

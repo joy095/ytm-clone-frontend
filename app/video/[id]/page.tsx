@@ -4,6 +4,7 @@
 
 import Image from "next/image";
 import React, { useState, useCallback } from "react";
+import ReactPlayer from "react-player";
 import {
   LuPlay,
   LuPause,
@@ -15,54 +16,54 @@ import {
   LuListVideo,
 } from "react-icons/lu";
 
-const VideoLuPlayerController = () => {
+const VideoPlayerController = () => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [isLuPlaying, setIsLuPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [showPlaylist, setShowPlaylist] = useState(false);
 
-  // Sample LuPlaylist data - in real app, this would likely be passed as props
-  const LuPlaylist = [
+  const playlist = [
     {
       id: 1,
-      title: "Memory Reboot (Slowed)",
-      artist: "Narvent and VØJ",
-      duration: 237, // 3:57 in seconds
-      thumbnail: "/api/placeholder/320/180",
+      title: "Promise",
+      artist: "Choi Yu Ree",
+      views: "5.5M views",
+      likes: "31K likes",
+      duration: 237,
+      url: "/video.mp4",
     },
     {
       id: 2,
-      title: "Distant Echoes (slowed + reverb)",
-      artist: "Narvent and VXLLAIN",
-      duration: 184, // 3:04 in seconds
-      thumbnail: "/api/placeholder/320/180",
+      title: "Tell Me It's Not a Dream",
+      artist: "10CM",
+      duration: 236,
+      url: "https://res.cloudinary.com/demo/video/upload/dog.mp4",
     },
     {
       id: 3,
-      title: "Strangers",
-      artist: "Kenya Grace",
-      duration: 174, // 2:54 in seconds
-      thumbnail: "/api/placeholder/320/180",
+      title: "Hold Me Back",
+      artist: "헤이즈",
+      duration: 233,
+      url: "https://res.cloudinary.com/demo/video/upload/bunny.mp4",
     },
   ];
 
-  const currentVideo = LuPlaylist[currentVideoIndex];
+  const currentVideo = playlist[currentVideoIndex];
 
   const handlePrevious = useCallback(() => {
-    setCurrentVideoIndex((prevIndex) => {
-      const newIndex = prevIndex - 1;
-      return newIndex < 0 ? LuPlaylist.length - 1 : newIndex;
-    });
+    setCurrentVideoIndex((prevIndex) =>
+      prevIndex === 0 ? playlist.length - 1 : prevIndex - 1
+    );
     setCurrentTime(0);
-  }, [LuPlaylist.length]);
+  }, [playlist.length]);
 
   const handleNext = useCallback(() => {
-    setCurrentVideoIndex((prevIndex) => {
-      const newIndex = prevIndex + 1;
-      return newIndex >= LuPlaylist.length ? 0 : newIndex;
-    });
+    setCurrentVideoIndex((prevIndex) =>
+      prevIndex === playlist.length - 1 ? 0 : prevIndex + 1
+    );
     setCurrentTime(0);
-  }, [LuPlaylist.length]);
+  }, [playlist.length]);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
@@ -71,135 +72,126 @@ const VideoLuPlayerController = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-black">
-      {/* Video Container */}
-      <div className="relative aspect-video bg-neutral-900">
-        <div className="absolute inset-0 flex items-center justify-center">
-          {!isLuPlaying && (
-            <button
-              onClick={() => setIsLuPlaying(true)}
-              className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-colors"
-            >
-              <LuPlay className="w-8 h-8 text-white fill-white" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Controls Bar */}
-      <div className="bg-neutral-900 p-4 text-white">
-        {/* Progress Bar */}
-        <div className="mb-4">
-          <div className="h-1 bg-neutral-700 rounded-full">
-            <div
-              className="h-full bg-white rounded-full"
-              style={{
-                width: `${(currentTime / currentVideo.duration) * 100}%`,
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Control Buttons */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={handlePrevious}
-              className="hover:bg-white/10 p-2 rounded-full"
-            >
-              <LuSkipBack className="w-6 h-6" />
-            </button>
-
-            <button
-              onClick={() => setIsLuPlaying(!isLuPlaying)}
-              className="hover:bg-white/10 p-2 rounded-full"
-            >
-              {isLuPlaying ? (
-                <LuPause className="w-6 h-6" />
-              ) : (
-                <LuPlay className="w-6 h-6" />
+    <div className="w-[calc(100vw-15rem)] h-screen">
+      <div className="md:flex h-[calc(100vh-64px)] w-full">
+        <div className="flex-1 md:flex">
+          <div className="md:flex-1">
+            <div className="relative aspect-video bg-black">
+              <ReactPlayer
+                url={currentVideo.url}
+                playing={isPlaying}
+                muted={isMuted}
+                width="100%"
+                height="100%"
+                controls={false}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onProgress={({ playedSeconds }) =>
+                  setCurrentTime(playedSeconds)
+                }
+              />
+              {!isPlaying && (
+                <button
+                  onClick={() => setIsPlaying(true)}
+                  className="absolute inset-0 flex items-center justify-center bg-black/50"
+                >
+                  <LuPlay className="w-16 h-16 text-white" />
+                </button>
               )}
-            </button>
+            </div>
 
-            <button
-              onClick={handleNext}
-              className="hover:bg-white/10 p-2 rounded-full"
-            >
-              <LuSkipForward className="w-6 h-6" />
-            </button>
-
-            <button
-              onClick={() => setIsMuted(!isMuted)}
-              className="hover:bg-white/10 p-2 rounded-full"
-            >
-              {isMuted ? (
-                <LuVolumeX className="w-6 h-6" />
-              ) : (
-                <LuVolume2 className="w-6 h-6" />
-              )}
-            </button>
-
-            <span className="text-sm">
-              {formatTime(currentTime)} / {formatTime(currentVideo.duration)}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <button className="hover:bg-white/10 p-2 rounded-full">
-              <LuListVideo className="w-6 h-6" />
-            </button>
-            <button className="hover:bg-white/10 p-2 rounded-full">
-              <LuSettings className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Up Next Section */}
-      <div className="bg-neutral-900 border-t border-neutral-800 p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-white font-medium">Up Next</h3>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-white/60">Auto-LuPlay</span>
-            <div className="w-10 h-6 bg-blue-600 rounded-full relative cursor-pointer">
-              <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full" />
+            <div className="hidden md:block p-4 text-white">
+              <h2 className="text-2xl font-medium mb-2">
+                {currentVideo.title}
+              </h2>
+              <div className="flex items-center gap-2 text-neutral-400">
+                <span>{currentVideo.artist}</span>
+                <span>•</span>
+                <span>{currentVideo.views}</span>
+                <span>•</span>
+                <span>{currentVideo.likes}</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="space-y-2">
-          {LuPlaylist.map(
-            (video, index) =>
-              index !== currentVideoIndex && (
-                <div
-                  key={video.id}
-                  onClick={() => {
-                    setCurrentVideoIndex(index);
-                    setCurrentTime(0);
-                  }}
-                  className="flex items-center gap-3 text-white/80 hover:bg-white/5 p-2 rounded cursor-pointer"
-                >
-                  <Image
-                    src={video.thumbnail}
-                    alt={video.title}
-                    height={80}
-                    width={128}
-                    className="w-32 h-20 object-cover rounded"
-                  />
-                  <div>
-                    <p className="font-medium">{video.title}</p>
-                    <p className="text-sm text-white/60">{video.artist}</p>
-                    <p className="text-sm text-white/60">
-                      {formatTime(video.duration)}
-                    </p>
+          {/* Up Next Section */}
+          <div className="hidden md:block w-96">
+            <div className="p-4">
+              <span className="text-white font-medium">UP NEXT</span>
+              <div className="space-y-2">
+                {playlist.map((video, index) => (
+                  <div
+                    key={video.id}
+                    onClick={() => {
+                      setCurrentVideoIndex(index);
+                      setCurrentTime(0);
+                    }}
+                    className={`flex items-center gap-3 p-2 rounded cursor-pointer ${
+                      currentVideoIndex === index
+                        ? "bg-white/10"
+                        : "hover:bg-white/5"
+                    }`}
+                  >
+                    <Image
+                      src="/api/placeholder/320/180"
+                      alt={video.title}
+                      height={80}
+                      width={128}
+                      className="w-24 h-16 object-cover rounded"
+                    />
+                    <div>
+                      <p className="font-medium line-clamp-1">{video.title}</p>
+                      <p className="text-sm text-white/60">{video.artist}</p>
+                      <p className="text-sm text-white/60">
+                        {formatTime(video.duration)}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )
-          )}
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Controls */}
+          <div className="md:hidden p-2 text-white">
+            <div className="mb-2">
+              <div className="h-1 bg-neutral-700 rounded-full">
+                <div
+                  className="h-full bg-white rounded-full"
+                  style={{
+                    width: `${(currentTime / currentVideo.duration) * 100}%`,
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between gap-4">
+              <button onClick={handlePrevious}>
+                <LuSkipBack className="w-6 h-6" />
+              </button>
+              <button onClick={() => setIsPlaying(!isPlaying)}>
+                {isPlaying ? (
+                  <LuPause className="w-6 h-6" />
+                ) : (
+                  <LuPlay className="w-6 h-6" />
+                )}
+              </button>
+              <button onClick={handleNext}>
+                <LuSkipForward className="w-6 h-6" />
+              </button>
+              <button onClick={() => setIsMuted(!isMuted)}>
+                {isMuted ? (
+                  <LuVolumeX className="w-6 h-6" />
+                ) : (
+                  <LuVolume2 className="w-6 h-6" />
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default VideoLuPlayerController;
+export default VideoPlayerController;
