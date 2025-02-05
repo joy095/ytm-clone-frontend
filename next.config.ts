@@ -8,9 +8,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
-      }
+      },
     ],
   },
+  distDir: "out",
 };
 
 export default nextConfig;
